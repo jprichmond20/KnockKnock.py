@@ -85,3 +85,5 @@ def cmdServer():
     while True:
         clientsocket,addr = serversocket.accept()
         threading.Thread(target=processReq, args=(clientsocket,addr,starts,punchlines)).start()
+
+cmdServer()
