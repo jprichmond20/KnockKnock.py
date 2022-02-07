@@ -11,9 +11,20 @@ def simpleServer():
     #   AF_INET is the Address Format:Internet -- you are going to connect with an IP Address
     #   SOCK_STREAM it the type of socket --- how to package the data.
     serversocket = socket(AF_INET, SOCK_STREAM)
-
-    starts = 
-
+    f = open("Starts.txt", "r")
+    f2 = open("Punchlines.txt", "r")
+    initial = f.readlines()
+    starts = []
+    initialPunch = f2.readlines()
+    punchlines = []
+    for thing in initial:
+        starts.append(thing.strip("\n"))
+    for thing in initialPunch:
+        punchlines.append(thing.strip("\n"))
+    print(len(starts))
+    print(len(punchlines))
+    print(starts)
+    print(punchlines)
     # allow your server to reuse the address instead of waiting for a timeout
     serversocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
 
@@ -21,23 +32,51 @@ def simpleServer():
     #   The port is 2000 -- this was chosen somewhat randomly
     #   NOTE: bind takes a tuple, not two parameters.
 
-    serversocket.bind(("172.16.212.44", 2000))
+    serversocket.bind(("172.16.212.44", 2023))
 
     # Start listening for requests.
     #   Argument is the size of the request buffer
     serversocket.listen(1)
+    def getIPAddress():
+        s = socket(AF_INET, SOCK_DGRAM)
+        s.connect(("8.8.8.8",80))
+        return s.getsockname()[0]
     while True:
         # Block here until there is a request
         #   when you accept, you should know 2 values
         #   clientsocket and addr (who connected to you)
         print("Waiting for connection....")
+        print("on " + getIPAddress() + "....")
         clientsocket, addr = serversocket.accept()
         print("Connnection from", addr)
+
+        jokeNum = random.randint(0,len(starts)-1)
+
         clientsocket.send("Knock-Knock".encode("ascii"))
+        print("Knock-Knock")
         msg = clientsocket.recv(1024)
         msg = msg.decode("ascii")
-        if msg == "   Who's there?":
-            clientsocket.send(starts[random.randint(5)])
+
+        if msg == "\tWho's there?":
+            clientsocket.send(starts[jokeNum].encode("ascii"))
+            print("\tWho's there?")
+            print(starts[jokeNum])
+        else:
+            print("Error...")
+            clientsocket.send("Error...".encode("ascii"))
+            clientsocket.close()
+
+        msg = clientsocket.recv(1024)
+        msg = msg.decode("ascii")
+
+        print(msg)
+
+        clientsocket.send(punchlines[jokeNum].encode("ascii"))
+        print(punchlines[jokeNum])
+
+        clientsocket.close()
+
+
         #if msg == "Who?":
         #    print(msg)
         #    clientsocket.send("I am Groot".encode("ascii"))
@@ -64,7 +103,7 @@ def simpleServer():
         # so you have to convert your string to ASCII
 
         #clientsocket.send(gethostname().encode('ascii'))
-        clientsocket.close()
+        #clientsocket.close()
         #serversocket.close()
 
 
