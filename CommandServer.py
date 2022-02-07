@@ -78,7 +78,7 @@ def cmdServer():
     for thing in initialPunch:
         punchlines.append(thing.strip("\n"))
     ip = getIPAddress()
-    serversocket.bind(ip,2000)
+    serversocket.bind(ip,2023)
     serversocket.listen(1)
     print("Waiting on ", ip)
     ### USE TRY CATCH :)
