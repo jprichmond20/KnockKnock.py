@@ -14,7 +14,7 @@ def simpleClient(location):
     msg = client.recv(1024)
     msg = msg.decode("ascii")
     print(msg)
-    client.send(input("ok or who (name) ex: who pi-106"))
+    client.send(input("ok or who (name) ex: who pi-106 :: ").encode("ascii"))
     msg = client.recv(1024)
     response = msg.decode("ascii")
     print(response)
