@@ -69,7 +69,49 @@ def processReq(clientsocket,addr,starts,punchlines):
                 clientsocket.close()
                 done = True
         elif msg == "TELL":
-            print("PLACEHOLDER")
+            msg = clientsocket.recv(1024)
+            msg = msg.decode("ascii")
+            if msg == "Knock-Knock":
+                print(msg)
+                clientsocket.send("\tWho's there?".encode('ascii'))
+                print("\tWho's there?")
+            else:
+                print("Error")
+                clientsocket.send("Error".encode("ascii"))
+                clientsocket.close()
+
+            msg = clientsocket.recv(1024)
+            response = msg.decode('ascii')
+            print(response)
+            if response == "Banana":
+                while not done:
+                    numC = random.randint(0, 10)
+                    if numC > 7:
+                        clientsocket.send(("\t" + response + " WHO!?").encode("ascii"))
+                        print("\t" + response + " WHO!?")
+                        msg = clientsocket.recv(1024)
+                        response = msg.decode('ascii')
+                        print(response)
+                        clientsocket.send(("\t" + response + " who?").encode("ascii"))
+                        print("\t" + response + " who?")
+                        msg = clientsocket.recv(1024)
+                        response = msg.decode('ascii')
+                        done = True
+                    else:
+                        clientsocket.send(("\t" + response + " who?").encode("ascii"))
+                        print("\t" + response + " who?")
+                        msg = clientsocket.recv(1024)
+                        response = msg.decode('ascii')
+                        print(response)
+            else:
+                clientsocket.send(("\t" + response + " who?").encode("ascii"))
+                print("\t" + response + " who?")
+                msg = clientsocket.recv(1024)
+                response = msg.decode("ascii")
+
+            print(response)
+
+            clientsocket.close()
         else:
             clientsocket.send("Protocol Violation")
             clientsocket.close()
