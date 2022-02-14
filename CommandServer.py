@@ -11,7 +11,8 @@ def processReq(clientsocket,addr,starts,punchlines):
     print("Connection from", addr)
     done = False
     while not done:
-        jokeNum = random.randint(0, len(starts))
+        #jokeNum = random.randint(0, len(starts))
+        jokeNum = len(starts)
         clientsocket.send("Knock-Knock".encode("ascii"))
         print("Knock-Knock")
         msg = clientsocket.recv(1024)
@@ -20,7 +21,7 @@ def processReq(clientsocket,addr,starts,punchlines):
             if msg == "\tWho's there?":
                 clientsocket.send("Banana".encode("ascii"))
                 print("\tWho's there?")
-                print(starts[jokeNum])
+                print("Banana")
             else:
                 print("Error...")
                 clientsocket.send("Error...".encode("ascii"))
@@ -35,6 +36,7 @@ def processReq(clientsocket,addr,starts,punchlines):
                 msg = msg.decode("ascii")
                 print(msg)
             print("Orange")
+            clientsocket.send("Orange".encode("ascii"))
             msg = clientsocket.recv(1024)
             msg = msg.decode("ascii")
             print(msg)
@@ -78,12 +80,15 @@ def cmdServer():
     for thing in initialPunch:
         punchlines.append(thing.strip("\n"))
     ip = getIPAddress()
-    serversocket.bind(ip,2023)
+    serversocket.bind((ip,2023))
     serversocket.listen(1)
-    print("Waiting on ", ip)
+
     ### USE TRY CATCH :)
     while True:
-        clientsocket,addr = serversocket.accept()
-        threading.Thread(target=processReq, args=(clientsocket,addr,starts,punchlines)).start()
-
+        print("Waiting on ", ip)
+        try:
+            clientsocket,addr = serversocket.accept()
+            threading.Thread(target=processReq, args=(clientsocket,addr,starts,punchlines)).start()
+        except:
+            pass
 cmdServer()

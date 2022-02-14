@@ -29,16 +29,18 @@ def simpleClient(location):
             numC = random.randint(0,10)
             if numC > 7:
                 client.send(("\t" + response + " WHO!?").encode("ascii"))
+                print("\t" + response + " WHO!?")
                 msg = client.recv(1024)
                 response = msg.decode('ascii')
                 print(response)
                 client.send(("\t" + response + " who?").encode("ascii"))
+                print("\t" + response + " who?")
                 msg = client.recv(1024)
                 response = msg.decode('ascii')
-                print(response)
-                client.close()
+                done = True
             else:
                 client.send(("\t" + response + " who?").encode("ascii"))
+                print("\t" + response + " who?")
                 msg = client.recv(1024)
                 response = msg.decode('ascii')
                 print(response)
